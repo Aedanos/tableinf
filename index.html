@@ -19,8 +19,8 @@
       };
       function getDataFromGoogleSheet() {
         gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: '1yGGm5N1LuqkshWtabO3-AjilrbAAB6HurP13hqksUKc',
-          range: 'Аркуш1',
+          spreadsheetId: '1GMdlZ45WDjenKPBSSYEwiB3TCaWQqfssvmWzT9M_lSg',
+          range: 'Зведена таблиця',
         }).then(function(response) {
           var range = response.result;
           console.log(range); // Додаємо цей рядок, щоб вивести дані в консоль
