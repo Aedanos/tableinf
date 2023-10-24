@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Отримання даних з Google Таблиці</title>
+    <script src="https://apis.google.com/js/api.js"></script>
+    <style>
+      #data td {
+        border: 1px solid black;
+      }
+    </style>
+    <script>
+      function start() {
+        gapi.client.init({
+          'apiKey': 'AIzaSyDyTwqGZKRXHSF3YV7Fpgm4QB4BpbDexo4',
+          'discoveryDocs': ['https://sheets.googleapis.com/$discovery/rest?version=v4'],
+        }).then(function() {
+          getDataFromGoogleSheet();
+        });
+      };
+      function getDataFromGoogleSheet() {
+        gapi.client.sheets.spreadsheets.values.get({
+          spreadsheetId: '1yGGm5N1LuqkshWtabO3-AjilrbAAB6HurP13hqksUKc',
+          range: 'Аркуш1',
+        }).then(function(response) {
+          var range = response.result;
+          console.log(range); // Додаємо цей рядок, щоб вивести дані в консоль
+          if (range.values.length > 0) {
+            var table = document.getElementById('data');
+            for (i = 0; i < range.values.length; i++) {
+              var row = document.createElement('tr');
+              for (j = 0; j < range.values[i].length; j++) {
+                var cell = document.createElement('td');
+                cell.textContent = range.values[i][j];
+                row.appendChild(cell);
+              }
+              table.appendChild(row);
+            }
+          } else {
+            var table = document.getElementById('data');
+            var row = document.createElement('tr');
+            var cell = document.createElement('td');
+            cell.textContent = 'Дані не отримано';
+            row.appendChild(cell);
+            table.appendChild(row);
+          }
+        }, function(response) {
+          console.log('Error: ' + response.result.error.message);
+        });
+      };
+      gapi.load('client', start);
+    </script>
+  </head>
+  <body>
+    <h1>Отримання даних з Google Таблиці</h1>
+    <table id="data"></table>
+  </body>
+</html>
