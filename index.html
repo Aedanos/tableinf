@@ -17,36 +17,50 @@
           getDataFromGoogleSheet();
         });
       };
-      function getDataFromGoogleSheet() {
-        gapi.client.sheets.spreadsheets.values.get({
-          spreadsheetId: '1yGGm5N1LuqkshWtabO3-AjilrbAAB6HurP13hqksUKc',
-          range: 'Аркуш1',
-        }).then(function(response) {
-          var range = response.result;
-          console.log(range); // Додаємо цей рядок, щоб вивести дані в консоль
-          if (range.values.length > 0) {
-            var table = document.getElementById('data');
-            for (i = 0; i < range.values.length; i++) {
-              var row = document.createElement('tr');
-              for (j = 0; j < range.values[i].length; j++) {
-                var cell = document.createElement('td');
-                cell.textContent = range.values[i][j];
-                row.appendChild(cell);
-              }
-              table.appendChild(row);
-            }
-          } else {
-            var table = document.getElementById('data');
-            var row = document.createElement('tr');
-            var cell = document.createElement('td');
-            cell.textContent = 'Дані не отримано';
-            row.appendChild(cell);
-            table.appendChild(row);
-          }
-        }, function(response) {
-          console.log('Error: ' + response.result.error.message);
+function getDataFromGoogleSheet() {
+  gapi.client.sheets.spreadsheets.values.get({
+    spreadsheetId: '1yGGm5N1LuqkshWtabO3-AjilrbAAB6HurP13hqksUKc',
+    range: 'Аркуш1',
+  }).then(function(response) {
+    var range = response.result;
+    console.log(range); // Додаємо цей рядок, щоб вивести дані в консоль
+    if (range.values.length > 0) {
+      var table = document.getElementById('data');
+      for (i = 0; i < range.values.length; i++) {
+        var row = document.createElement('tr');
+        for (j = 0; j < range.values[i].length; j++) {
+          var cell = document.createElement('td');
+          cell.textContent = range.values[i][j];
+          row.appendChild(cell);
+        }
+        table.appendChild(row);
+      }
+
+      // Get all the links in the table.
+      var links = document.querySelectorAll('#data td a');
+
+      // Add an event listener to each link.
+      for (var k = 0; k < links.length; k++) {
+        links[k].addEventListener('click', function(event) {
+          // Prevent the default behavior of the link.
+          event.preventDefault();
+
+          // Open the link in a new tab.
+          window.open(this.href, '_blank');
         });
-      };
+      }
+    } else {
+      var table = document.getElementById('data');
+      var row = document.createElement('tr');
+      var cell = document.createElement('td');
+      cell.textContent = 'Дані не отримано';
+      row.appendChild(cell);
+      table.appendChild(row);
+    }
+  }, function(response) {
+    console.log('Error: ' + response.result.error.message);
+  });
+}
       gapi.load('client', start);
 
       // Функція фільтрації
